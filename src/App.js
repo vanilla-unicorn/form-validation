@@ -19,7 +19,8 @@ class App extends Component {
 		this.state = {
 			username: {
 				valid: false,
-				invalid: false
+				invalid: false,
+				spaces: false
 			},
 			email: {
 				valid: false,
@@ -31,7 +32,8 @@ class App extends Component {
 			},
 			verify: {
 				valid: false,
-				invalid: false
+				invalid: false,
+				unmatched: false
 			}
 		};
 	}
@@ -40,24 +42,145 @@ class App extends Component {
 		event.preventDefault();
 		const form = event.target;
 		console.log(form);
+		// form.reset();
+		// this.setState({
+		// 	username: {
+		// 		valid: false,
+		// 		invalid: false,
+		// 		spaces: false
+		// 	},
+		// 	email: {
+		// 		valid: false,
+		// 		invalid: false
+		// 	},
+		// 	password: {
+		// 		valid: false,
+		// 		invalid: false
+		// 	},
+		// 	verify: {
+		// 		valid: false,
+		// 		invalid: false,
+		// 		unmatched: false
+		// 	}
+		// });
 	}
 
 	handleChange(event) {
 		event.preventDefault();
 		if (event.target.value.length === 0) {
-			this.setState({
-				[event.target.name]: {
-					valid: false,
-					invalid: true
-				}
-			});
+			switch (event.target.name) {
+				case 'username':
+					this.setState({
+						[event.target.name]: {
+							valid: false,
+							invalid: true,
+							spaces: false
+						}
+					});
+					break;
+				case 'verify':
+					let password = document.querySelector('#password').value;
+					if (event.target.value !== password) {
+						this.setState({
+							[event.target.name]: {
+								valid: false,
+								invalid: true,
+								unmatched: true
+							}
+						});
+					} else {
+						this.setState({
+							[event.target.name]: {
+								valid: false,
+								invalid: true,
+								unmatched: false
+							}
+						});
+					}
+					break;
+				default:
+					this.setState({
+						[event.target.name]: {
+							valid: false,
+							invalid: true
+						}
+					});
+			}
 		} else {
-			this.setState({
-				[event.target.name]: {
-					valid: true,
-					invalid: false
-				}
-			});
+			switch (event.target.name) {
+				case 'username':
+					if (/\s/.test(event.target.value)) {
+						this.setState({
+							[event.target.name]: {
+								valid: false,
+								invalid: true,
+								spaces: true
+							}
+						});
+					} else {
+						this.setState({
+							[event.target.name]: {
+								valid: true,
+								invalid: false,
+								spaces: false
+							}
+						});
+					}
+					break;
+				case 'password':
+					this.setState({
+						[event.target.name]: {
+							valid: true,
+							invalid: false
+						}
+					});
+					let verify = document.querySelector('#verify').value;
+					if (verify !== event.target.value) {
+						this.setState({
+							verify: {
+								valid: false,
+								invalid: true,
+								unmatched: true
+							}
+						});
+					} else {
+						this.setState({
+							verify: {
+								valid: true,
+								invalid: false,
+								unmatched: false
+							}
+						});
+					}
+					break;
+				case 'verify':
+					let password = document.querySelector('#password').value;
+					if (event.target.value !== password) {
+						this.setState({
+							[event.target.name]: {
+								valid: false,
+								invalid: true,
+								unmatched: true
+							}
+						});
+					} else {
+						this.setState({
+							[event.target.name]: {
+								valid: true,
+								invalid: false,
+								unmatched: false
+							}
+						});
+					}
+					break;
+				default:
+					this.setState({
+						[event.target.name]: {
+							valid: true,
+							invalid: false
+						}
+					});
+			}
 		}
 	}
 
@@ -87,6 +210,9 @@ class App extends Component {
 							<FormFeedback invalid={this.state.username.invalid.toString()}>
 								required
 							</FormFeedback>
+							<FormFeedback invalid={this.state.username.spaces.toString()}>
+								username may not contain any empty spaces
+							</FormFeedback>
 							<FormFeedback valid={this.state.username.valid.toString()}>
 								Great!
 							</FormFeedback>
@@ -113,6 +239,7 @@ class App extends Component {
 							<Input
 								name="password"
 								type="password"
+								id="password"
 								style={inputStyle}
 								valid={this.state.password.valid}
 								invalid={this.state.password.invalid}
@@ -130,6 +257,7 @@ class App extends Component {
 							<Input
 								name="verify"
 								type="password"
+								id="verify"
 								style={inputStyle}
 								valid={this.state.verify.valid}
 								invalid={this.state.verify.invalid}
@@ -138,7 +266,7 @@ class App extends Component {
 							<FormFeedback invalid={this.state.verify.invalid.toString()}>
 								required
 							</FormFeedback>
-							<FormFeedback invalid={this.state.verify.invalid.toString()}>
+							<FormFeedback invalid={this.state.verify.unmatched.toString()}>
 								passwords must match
 							</FormFeedback>
 							<FormFeedback valid={this.state.verify.valid.toString()}>
