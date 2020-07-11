@@ -42,27 +42,27 @@ class App extends Component {
 		event.preventDefault();
 		const form = event.target;
 		console.log(form);
-		// form.reset();
-		// this.setState({
-		// 	username: {
-		// 		valid: false,
-		// 		invalid: false,
-		// 		spaces: false
-		// 	},
-		// 	email: {
-		// 		valid: false,
-		// 		invalid: false
-		// 	},
-		// 	password: {
-		// 		valid: false,
-		// 		invalid: false
-		// 	},
-		// 	verify: {
-		// 		valid: false,
-		// 		invalid: false,
-		// 		unmatched: false
-		// 	}
-		// });
+		form.reset();
+		this.setState({
+			username: {
+				valid: false,
+				invalid: false,
+				spaces: false
+			},
+			email: {
+				valid: false,
+				invalid: false
+			},
+			password: {
+				valid: false,
+				invalid: false
+			},
+			verify: {
+				valid: false,
+				invalid: false,
+				unmatched: false
+			}
+		});
 	}
 
 	handleChange(event) {
