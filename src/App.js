@@ -67,6 +67,16 @@ class App extends Component {
 							/>
 							<FormFeedback invalid>minimum 8 characters</FormFeedback>
 						</FormGroup>
+						<FormGroup>
+							<Label htmlFor="verify">Verify Password:</Label>
+							<Input
+								name="verify"
+								type="password"
+								style={inputStyle}
+								valid={false}
+								invalid={false}
+							/>
+						</FormGroup>
 					</Container>
 					<Button color="primary" size="lg" className="mt-3 w-75">
 						Submit
